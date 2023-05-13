@@ -1,6 +1,9 @@
 import { gql, useMutation } from "@apollo/client";
 import e from "cors";
 import { useState } from "react";
+import { DivBtn, Form } from "./posts/createPost";
+import { Header } from "./posts";
+import router from "next/router";
 
 
 const CREATE_USER_MUTATION = gql`
@@ -38,9 +41,15 @@ function CreateUserForm() {
         },
       });
     };
+    const handleHome = async () => {
+      router.push("/");
+    };
   
     return (
-      <form onSubmit={handleSubmit}>
+    
+      <div>
+        <Header>Create User</Header>
+      <Form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username">Name:</label>
           <input
@@ -63,7 +72,11 @@ function CreateUserForm() {
           {loading ? 'Creating user...' : 'Create user'}
         </button>
         {error && <p>{error.message}</p>}
-      </form>
+      </Form>
+      <DivBtn>
+        <button onClick={handleHome}> Inicio </button>
+    </DivBtn>
+      </div>
     );
   }
   

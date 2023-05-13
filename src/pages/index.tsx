@@ -2,7 +2,6 @@ import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
-
 import Link from "next/link";
 import router from "next/router";
 import { client } from "@/utils/apollo-client";
@@ -33,9 +32,9 @@ export default function Home({ posts }: PostsProps) {
   return (
     <div>
       <header className={styles.header}>Posts</header>
-      <div style={{ display: "flex" }}>
+      <Container>
         {ultimos3posts.map((post) => (
-          <div
+          <List
             key={post.id}
             style={{
               display: "inline-block",
@@ -53,13 +52,14 @@ export default function Home({ posts }: PostsProps) {
                 style={{ width: "150px", height: "150px" }}
               />
             </Link>
-          </div>
+          </List>
         ))}
-      </div>
-      <div>
-        <button onClick={onHandlePosts}>Ver todos los posts</button>
+      </Container>
+      <DivBtn>
+        <button onClick={onHandlePosts}>Ver más posts</button>
         <button onClick={createUsers}>Crear Usuario</button>
-      </div>
+    
+    </DivBtn>
     </div>
   );
 }
@@ -82,5 +82,67 @@ export const getServerSideProps: GetServerSideProps<PostsProps> = async () => {
 };
 
 
+export const Container = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 80%;
+  height: 100%;
+  padding: 20px;
+  background-color: grey;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 150px;
+`;
+
+const DivBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 20px;
+  margin: 0 auto;
+
+  button {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f5f5f5;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    font-size: 1rem;
+    color: #000;
+    transition: all 0.3s ease-in-out;
+    &:hover {
+      background-color: grey;
+      color: #fff;
+    }
+
+`;
 
 
+export const List = styled.div`
+  display: flex;
+  flex-direction: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 20px;
+  margin: 0 auto;
+  
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  margin-bottom: 150px;
+  color: #000;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    background-color: grey;
+    color: #fff;
+  }
+`;

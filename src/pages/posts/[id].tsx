@@ -5,6 +5,9 @@ import { gql } from "@apollo/client";
 import { Post, Comment } from "@/typedefs";
 import { client } from "@/utils/apollo-client";
 import router from "next/router";
+import { Header } from "../posts";
+import { DivBtn, Form } from "./createPost";
+import { styled } from "styled-components";
 
 interface PostPageProps {
   post: Post;
@@ -47,17 +50,18 @@ function PostPage({ post, comments }: PostPageProps) {
 
   return (
     <div>
-      <h1>{post.title}</h1>
-      <p>{post.body}</p>
-
-      <div>
-        <button onClick={handleBack}>Atrás</button>
-        <button onClick={handleHome}>Inicio</button>
-      </div>
-
-      <h2>Comentarios ({commentsList.length})</h2>
-
-      <form onSubmit={handleSubmit}>
+      <Header>
+        <h1>{post.title}</h1>
+      </Header>
+      <DivBody>
+      <h2>Contenido</h2>
+      <span>{post.body} </span>
+      </DivBody>
+      
+      <DivComments>
+        <h2>Comentarios ({commentsList.length})</h2>
+      </DivComments>
+      <Form onSubmit={handleSubmit}>
         <h3>Añadir comentario</h3>
         <div>
           <label>
@@ -94,28 +98,30 @@ function PostPage({ post, comments }: PostPageProps) {
         <div>
           <button type="submit">Añadir</button>
         </div>
-       
-      </form>
-
+      </Form>
+      
       {commentsList.map((comment) => (
-        <div key={comment.id}>
+        <CommentList key={comment.id}>
           <p>{comment.body}</p>
           <p>{comment.createdAt}</p>
           <p>{comment.updatedAt}</p>
-          <p>{comment.user.name }</p>
-          {comment.replies.map(
-            (reply) => (
-                <div key={reply.id}>
-                    <p>{reply.body}</p>
-                    <p>{reply.createdAt}</p>
-                    <p>{reply.updatedAt}</p>
-                    <p>{reply.user.name }</p>
-                </div>
-            )
-          )}
-        </div>
+          <p>{comment.user.name}</p>
+          {comment.replies.map((reply) => (
+            <div key={reply.id}>
+              <p>{reply.body}</p>
+              <p>{reply.createdAt}</p>
+              <p>{reply.updatedAt}</p>
+              <p>{reply.user.name}</p>
+            </div>
+          ))}
+       </CommentList>
       ))}
+      <DivBtn>
+        <button onClick={handleBack}>Atrás</button>
+        <button onClick={handleHome}>Inicio</button>
+      </DivBtn>
     </div>
+    
   );
 }
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
@@ -129,7 +135,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
           title
           body
         }
-        comments( limit: $limit, ) {
+        comments(limit: $limit) {
           id
           body
           createdAt
@@ -155,9 +161,52 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     `,
     variables: { id },
   });
-  
 
   return { props: { post: data.post, comments: data.comments } };
 };
-
 export default PostPage;
+
+
+const DivComments = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 20px;
+  width: 26%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: grey;
+`;
+
+
+export const DivBody = styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+margin: 0 auto;
+padding: 20px;
+width: 26%;
+border: 1px solid #ccc;
+border-radius: 4px;
+background-color: grey;
+text-align: center;
+
+  span {
+    font-size: 20px;
+    font-weight: bold;
+    white-space: pre-wrap;
+  }
+`;
+
+export const CommentList = styled.div`display: flex;
+justify-content: center;
+align-items: center;
+margin: 0 auto;
+padding: 20px;
+width: 46%;
+border: 1px solid #ccc;
+border-radius: 4px;
+background-color: grey;
+text-align: center;
+`;
